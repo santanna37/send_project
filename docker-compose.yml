@@ -1,0 +1,16 @@
+services:
+  mysqldb:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: senha
+      MYSQL_DATABASE: public
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:
+  mysql_config:
