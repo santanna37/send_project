@@ -5,8 +5,7 @@ from sqlalchemy import text
 def test_create_engine_database():
     db_connection = DBConnectionHandler()
     engine = db_connection.get_engine()
-    print(engine)
-    
+
 
 
 def test_work_engine_database():
