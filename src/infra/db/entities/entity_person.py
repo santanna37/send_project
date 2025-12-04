@@ -3,7 +3,7 @@ from src.infra.db.settings.base import Base
 
 
 
-class PersonEntitie(Base):
+class PersonEntity(Base):
     __tablename__ = "person"
 
     id = Column(Integer, primary_key= True, autoincrement= True)

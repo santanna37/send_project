@@ -1,1 +1,1 @@
-from .person_entitie import PersonEntitie
+from .entity_person import PersonEntity
