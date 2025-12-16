@@ -3,6 +3,6 @@ from typing import Optional
 
 @dataclass
 class PersonModel:
-    id: int 
-    name: str 
-    email: str 
+    name: str
+    id: int |None = None
+    email: str

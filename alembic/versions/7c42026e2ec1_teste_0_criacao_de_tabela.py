@@ -27,7 +27,7 @@ def upgrade() -> None:
     sa.Column('email', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.drop_table('users')
+    #op.drop_table('users')
     # ### end Alembic commands ###
 
 
@@ -43,5 +43,5 @@ def downgrade() -> None:
     mysql_default_charset='utf8mb4',
     mysql_engine='InnoDB'
     )
-    op.drop_table('person')
+    #op.drop_table('person')
     # ### end Alembic commands ###
