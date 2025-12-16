@@ -1,0 +1,83 @@
+# ============================================
+# CORE PYTHON
+# ============================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.db
+
+# Virtual envs
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Jupyter artifacts
+.ipynb_checkpoints/
+
+# ============================================
+# PROJECT-SPECIFIC (FASTAPI / SQLALCHEMY / ALEMBIC)
+# ============================================
+alembic/versions/*.pyc
+alembic/versions/*__pycache__/
+alembic/versions/*.log
+
+# SQLite (if used)
+*.sqlite
+*.sqlite3
+
+# ============================================
+# TESTING LAYER
+# ============================================
+.coverage
+.cache/
+pytest_cache/
+.tox/
+.nox/
+
+# ============================================
+# STANDARD DEV TOOLS
+# ============================================
+.mypy_cache/
+.pytype/
+.pyright/
+ruff_cache/
+
+# ============================================
+# OS / EDITOR NOISE
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+.history/
+
+# ============================================
+# LOGS & OUTPUT
+# ============================================
+*.log
+*.out
+*.err
+
+# ============================================
+# DOCKER & BUILD
+# ============================================
+*.pid
+*.seed
+build/
+dist/
+*.egg-info/
+
+# Docker
+docker-compose.override.yml
