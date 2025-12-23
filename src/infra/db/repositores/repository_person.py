@@ -10,7 +10,7 @@ from typing import List
 
 class PersonRepository(PersonRepositoryInterface):
 
-    def create_person(self,person: PersonModel) -> str:
+    def create_person(self,person: PersonModel) -> PersonModel:
 
         new_user = PersonMapper.domain_to_entity(model = person)
 

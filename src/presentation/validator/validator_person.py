@@ -1,22 +1,18 @@
 from typing import Dict
+import unicodedata
 
 
-class ValidatorPerson:
-
-    def  __init__(self, body: Dict):
-        self.body = body
-        self.name = body.get('name')
-        self.email = body.get('email')
+class PersonValidator:
 
     def name_validator(self, name: str) -> str:
         """Validação de nome """
-        name_str = self.name
+        name_str = name
 
-        name_lista = self.name.split()
+        name_lista = name.split()
         novo = []
         name_person = ""
         # 1 - se não tiver nome
-        if not self.name:
+        if not name:
             raise ValueError("Nome é obrigatório")
 
         # 2 - se não tiver sobrenome
@@ -41,10 +37,13 @@ class ValidatorPerson:
         return name_person
     
 
-    def email_validador(self, email: str) -> str:
+    def email_validador(self, email_person: str) -> str:
         """ validador de email """
 
-        email = self.email
+        email = email_person
+
+        # tratamento de segurança
+        email = unicodedata.normalize("NFKC", email)
 
         # 0 - tipo str para o email
         if not isinstance(email, str):
@@ -59,15 +58,15 @@ class ValidatorPerson:
         email_lista = email_lista.split('@')
         
         # verifica se tem @
-        if "@" in email:
+        if "@" not in email:
             raise ValueError("email invalido - sem @")
 
         #verifica se tem nome e dominio
-        if len(email_lista) < 1:
+        if len(email_lista) != 2:
             raise ValueError("email invalido - incompleto")
 
         # verifica se tem ponto
-        if '.' in email_lista[1]:
+        if '.' not in email_lista[1]:
             raise ValueError("email invalido - incompleto - falta ponto")
         
         # 3 - Caracteres válidos
@@ -107,5 +106,15 @@ class ValidatorPerson:
             if label[0] == '-' or label[-1] == '-':
                 raise ValueError('Emain invalido - caracter invalido')
         
-            if not label.isalnum():
+            if not label.replace('-','').isalnum():
                 raise ValueError('email invalido - carater invalido ')
+
+        # tratamento email 
+        # retira espaços
+        email = email.strip()
+        print(email)
+
+        # tudo minusculo
+        email_person = email.lower()
+
+        return email_person

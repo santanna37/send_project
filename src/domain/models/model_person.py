@@ -4,5 +4,5 @@ from typing import Optional
 @dataclass
 class PersonModel:
     name: str
-    id: int |None = None
     email: str
+    id: int |None = None
