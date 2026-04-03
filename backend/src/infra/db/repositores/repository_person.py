@@ -1,33 +1,43 @@
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.mappers.mapper_person import PersonMapper
+from src.infra.db.mappers.mapper import DataMapper
 from src.infra.db.entities.entity_person import PersonEntity
 from src.domain.models.model_person import PersonModel
 from src.data.interface.repository_person_interface import PersonRepositoryInterface
 
 from typing import List
+import logging
+
+
+
+logger = logging.getLogger(__name__)
 
 
 
 class PersonRepository(PersonRepositoryInterface):
 
+    def __init__(self, mapper: DataMapper):
+        self.__mapper = mapper
+        self.__entity = PersonEntity
+        self.__model = PersonModel
+
     def create_person(self,person: PersonModel) -> PersonModel:
 
-        new_user = PersonMapper.domain_to_entity(model = person)
+        new_user = self.__mapper.model_to_entity(model = person, entity_cls= self.__entity)
 
         with DBConnectionHandler() as database:
             try:
                 database.add(new_user)
                 database.commit()
-                print(person)
+                database.refresh(new_user)
+                logger.info(f"[LOG_DB] - OK - Usuario: {person.name} cadastrado")
                 return person
 
             except Exception as exception:
                 database.rollback()
-                print(exception)
+                logger.exception(f"[LOG_DB] - EXCEPTION - Erro ao salvar usuario {person.name}")
                 raise exception
 
             finally:
-                print('acabou')
                 database.close()
 
 
@@ -35,7 +45,7 @@ class PersonRepository(PersonRepositoryInterface):
         with DBConnectionHandler() as database:
             try:
                 persons =(
-                     database
+                database
                 .query(PersonEntity)
                 .filter(PersonEntity.name == name)
                 .all()

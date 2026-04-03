@@ -15,22 +15,9 @@ class PersonEntity(Base):
     email = Column(String(100))
     password = Column(String(100))
 
-    customer = relationship("CustomerEntity", back_populates = "customer")
-
-
-
+    customer = relationship("CustomerEntity", back_populates = "person")
 
     def __repr__(self):
-        return f"Person [name = {self.name}, email = {self.email},]"
+        return f"Person [name = {self.name}, email = {self.email}]"
 
-class CustomerEntity(Base):
-    __tablename__ = "customer"
 
-    id = Column(Integer, primary_key = True, autoincrement = True)
-    razao_social = Column(String(100))
-    cnpj = Column(String(100))
-    phone = Column(String(20))
-    email = Column(string(100))
-    id_person = Column(Integer, ForeignKey('person.id'))
-
-    person = relationship("PersonEntity", back_populates = "person")

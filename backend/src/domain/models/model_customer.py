@@ -3,39 +3,36 @@ from typing import Optional
 from pydantic import BaseModel, Field, ConfigDict
 
 
-class PersonModel(BaseModel):
-    
+
+
+class CustomerModel(BaseModel):
+
     model_config = ConfigDict(from_attributes=True)
 
     name: str = Field(
         ...,
-        min_length=3,
+        min_length= 3,
         max_length= 100,
         description="Nome completo"
-        )
-    cpf: str = Field(
-        ...,
-        )
+    )
     cnpj: str = Field(
         ...,
-        description = "CNPJ somente número"
+        description="CNPJ somente números"
     )
     phone: str = Field(
         ...,
         min_length=10,
-        description="Telefone com ddd"
+        description="Telefone com DDD"
     )
     email: str = Field(
         ...,
-        description="Email mais usado"
+        description="email mais usado"
     )
-    password: str = Field(
-        ...,
-        min_length=3,
-        description="utilize uma senha forte"
+    id_person: int = Field(
+        None,
+        description="ID do person"
     )
     id: int = Field(
         None,
-        description="ID unico do usuario"
+        description="ID unico da empresa"
     )
-

@@ -11,10 +11,10 @@ class CustomerEntity(Base):
     name = Column(String(100))
     cnpj = Column(String(100))
     phone = Column(String(20))
-    email = Column(string(100))
+    email = Column(String(100))
     id_person = Column(Integer, ForeignKey('person.id'))
 
-    person = relationship("PersonEntity", back_populates = "person")
+    person = relationship("PersonEntity", back_populates = "customer")
 
     def __repr__(self):
         return f"Customer [name = {self.name}, cnpj = {self.cnpj}]"
