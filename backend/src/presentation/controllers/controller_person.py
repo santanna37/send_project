@@ -4,7 +4,7 @@ from src.presentation.http_types.http_response import HttpResponse
 from src.domain.use_case.case_person.use_case_person_interface import UseCasePersonInterface
 from src.presentation.interfaces.controller_person_interface import PersonControllerInterface
 from src.presentation.dto.dto_person import DTOPerson
-from src.infra.db.mappers.mapper_person import PersonMapper
+from src.infra.db.mappers.mapper import DataMapper
 from src.presentation.http_types.status_code import HTTPStatus
 
 
@@ -21,6 +21,8 @@ class  PersonController(PersonControllerInterface):
             person_model = self._dto.dto_person_create(person_dict= http_request.body)
 
             result = self._use_case.create(person= person_model)
+
+            result = self._dto.dto_person_response(person_model= result)
 
 
             return HttpResponse(status_code = HTTPStatus.CREATED, body = result)

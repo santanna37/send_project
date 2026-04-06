@@ -118,3 +118,22 @@ class PersonValidator:
         email_person = email.lower()
 
         return email_person
+
+
+    def cpf_validator(self, cpf: str) -> str:
+        return cpf
+
+
+    def cnpj_validator(self, cnpj:str) -> str:
+        return cnpj
+
+
+    def phone_validator(self, phone: str) -> str:
+        return phone
+
+
+    def password_validator(self, password: str) -> str:
+        return password
+
+
+

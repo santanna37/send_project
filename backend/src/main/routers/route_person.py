@@ -6,7 +6,7 @@ router = APIRouter(prefix="/person", tags=["Person"])
 
 
 
-@router.post("/")
+@router.post("/register")
 async def create_person_router(request: Request):
     return await person_adapter_create(request=request)
     

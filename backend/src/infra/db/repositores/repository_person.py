@@ -41,23 +41,25 @@ class PersonRepository(PersonRepositoryInterface):
                 database.close()
 
 
-    def read_person(self, name: str) ->List:
+    def read_person(self, email: str = None, cpf: str = None) ->PersonModel:
+
         with DBConnectionHandler() as database:
             try:
-                persons =(
-                database
-                .query(PersonEntity)
-                .filter(PersonEntity.name == name)
-                .all()
-                )
-                lista_person = []
-
-                for person in persons:
-                    person = PersonMapper.entity_to_domain(entity= person)
-                    lista_person.append(person)
+                query =  database.query(PersonEntity)
                 
-                print(lista_person)
-                return lista_person
+                if email is not None:
+                    query = query.filter(PersonEntity.email == email)
+                
+                if cpf is not None:
+                    query = query.filter(PersonEntity.cpf == cpf)
+                
+                print(query)
+                response = query.distinct().first()
+
+                print(response)
+                response = self.__mapper.entity_to_model(entity= response, model_cls= self.__model)
+
+                return response
             
             except Exception as exception:
                 database.rollback()
@@ -69,38 +71,38 @@ class PersonRepository(PersonRepositoryInterface):
                 database.close()
 
 
-    def update_person(self, name: str, new_data:PersonModel) -> PersonModel:
-        with DBConnectionHandler() as database:
-            try:
-                quest =(
-                    database
-                .query(PersonEntity)
-                .filter(PersonEntity.name == name)
-                .first()
-                )
+    # def update_person(self, name: str, new_data:PersonModel) -> PersonModel:
+    #     with DBConnectionHandler() as database:
+    #         try:
+    #             quest =(
+    #                 database
+    #             .query(PersonEntity)
+    #             .filter(PersonEntity.name == name)
+    #             .first()
+    #             )
 
-                if not quest:
-                    return None
+    #             if not quest:
+    #                 return None
                 
-                new_data = new_data.__dict__
+    #             new_data = new_data.__dict__
                 
-                for key, value in new_data.items():
-                    if value is not None:
-                        setattr(quest,key,value)
+    #             for key, value in new_data.items():
+    #                 if value is not None:
+    #                     setattr(quest,key,value)
                 
-                database.commit()
-                database.refresh(quest)
+    #             database.commit()
+    #             database.refresh(quest)
 
-                update_person = PersonMapper.entity_to_domain(quest)
-                return update_person
+    #             update_person = PersonMapper.entity_to_domain(quest)
+    #             return update_person
 
-            except Exception as exception:
-                database.rollback()
-                return exception
+    #         except Exception as exception:
+    #             database.rollback()
+    #             return exception
 
-            finally:
-                print('update_acabou')
-                database.close()
+    #         finally:
+    #             print('update_acabou')
+    #             database.close()
 
 
 

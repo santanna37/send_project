@@ -3,6 +3,7 @@ from src.data.use_case.case_person.use_case_person import UseCasePerson
 from src.presentation.controllers.controller_person import PersonController
 from src.presentation.dto.dto_person import DTOPerson
 from src.presentation.validator.validator_person import PersonValidator
+from src.infra.db.mappers.mapper import DataMapper
 
 class PersonCompose:
 
@@ -12,7 +13,7 @@ class PersonCompose:
         validator = PersonValidator()
         dto = DTOPerson(validator= validator)
 
-        repository = PersonRepository()
+        repository = PersonRepository(mapper=DataMapper)
         use_case = UseCasePerson(repository= repository)
         controller = PersonController(use_case= use_case,dto= dto)
 
