@@ -56,7 +56,7 @@ class PersonRepository(PersonRepositoryInterface):
                 print(query)
                 response = query.distinct().first()
 
-                print(response)
+                print(f"print do response: {response}")
                 response = self.__mapper.entity_to_model(entity= response, model_cls= self.__model)
 
                 return response

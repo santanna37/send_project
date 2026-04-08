@@ -7,6 +7,9 @@ from typing import Dict, List
 class UseCasePersonInterface(ABC):
 
     @abstractmethod
+    def login(self, email: str, password: str): pass
+
+    @abstractmethod
     def create(self, person: PersonModel) -> str: pass
 
     # @abstractmethod
@@ -14,7 +17,3 @@ class UseCasePersonInterface(ABC):
 
     # @abstractmethod
     # def update(self, name: str, new_data: PersonModel) -> str: pass
-
-    def create_hash(self, password: str) -> str: pass
-
-    def check_hash(self, password: str, hash_check: str) -> bool: pass
