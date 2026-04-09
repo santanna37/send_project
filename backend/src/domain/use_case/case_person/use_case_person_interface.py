@@ -1,4 +1,3 @@
-from src.data.interface.repository_person_interface import PersonRepositoryInterface
 from src.domain.models.model_person import PersonModel
 
 from abc import ABC, abstractmethod

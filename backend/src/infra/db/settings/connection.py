@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine  
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 class DBConnectionHandler:
 
@@ -7,7 +7,7 @@ class DBConnectionHandler:
         self.__conection_string = "mysql+pymysql://root:senha@localhost:3306/public"
 
         self.__engine = self.__create_database_engine()
-        self.session = None
+        self.session: Session = None
 
     def __create_database_engine(self):
         engine = create_engine(self.__conection_string)
@@ -16,7 +16,7 @@ class DBConnectionHandler:
     def get_engine(self):
         return self.__engine
 
-    def __enter__(self):
+    def __enter__(self) -> Session:
         session_make = sessionmaker(bind = self.__engine)
         self.session = session_make()
         return self.session 

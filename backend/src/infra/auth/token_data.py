@@ -1,4 +1,4 @@
-from src.data.interface.token_data_interface import TokenAuthInterface
+from src.data.interface.token_data_interface import TokenInterface
 from src.domain.models.model_person import PersonModel
 from typing import List, Dict
 import jwt
@@ -9,7 +9,7 @@ KEY="luizfelipedemenezesbernardo_27.09.90/37"
 
 
 
-class TokenAuth(TokenAuthInterface):
+class Token(TokenInterface):
 
     def authenticate(self, person: PersonModel) -> Dict:
         token_data = {
@@ -20,3 +20,12 @@ class TokenAuth(TokenAuthInterface):
         token = jwt.encode(token_data, KEY, algorithm="HS256")
 
         return {'success': True, "access_token": token}
+
+    def decode(self, token: str) -> Dict:
+        try:
+            return jwt.decode(token,KEY,algorithms=["HS256"])
+        
+        except jwt.ExpiredSignatureError:
+            raise ValueError("Token expirado")
+        except jwt.InvalidTokenError:
+            raise ValueError("Token Invalido")

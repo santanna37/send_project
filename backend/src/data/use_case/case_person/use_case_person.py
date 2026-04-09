@@ -18,31 +18,6 @@ class UseCasePerson(UseCasePersonInterface):
         self.__token = token
         self.__hash = hash_person
 
-    # def create_hash(self, password: str) -> str:
-    #     hash_password =  password.encode('utf-8')
-    #     print(hash_password)
-    #     hashed_bytes = bcrypt.hashpw(hash_password, bcrypt.gensalt())
-    #     print(hashed_bytes)
-    #     hashed_decode = hashed_bytes.decode('utf-8')
-    #     print(hashed_decode)
-    #     return hashed_decode
-    
-    # def check_hash(self, password: str, hash_chec: str) -> bool:
-    #     check_password = bcrypt.checkpw(password= password.encode('utf-8'), hashed_password= hash_chec.encode('utf-8'))
-    #     print(f'comparaçaos: {check_password}')
-    #     return check_password
-
-    # def authenticate(self, person: PersonModel) -> Dict:
-    #     token_data = {
-    #         "sub": person.id,
-    #         "exp": datetime.utcnow() + timedelta(hours=24)
-    #     }
-
-    #     token = jwt.encode(token_data, KEY, algorithm="HS256")
-
-    #     return {'success': True, "access_token": token}
-
-
     def login(self, email: str, password: str):
         person = self.__repository.read_person(email= email)
         if not person:
@@ -61,7 +36,6 @@ class UseCasePerson(UseCasePersonInterface):
         password_hash = self.__hash.create_hash(password= person.password)
         person.password = password_hash
         new_person = self.__repository.create_person(person= person)
-        
 
         return new_person
 

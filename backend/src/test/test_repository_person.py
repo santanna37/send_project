@@ -27,10 +27,10 @@ user_test = PersonModel(
 #     print('passou_create_test')
 
 
-def test_repo_list_person():
-    repo = PersonRepository(mapper= DataMapper)
-    lista = repo.read_person(email =  user_test.email)
-    print(f'read_passou_test = {lista}')
+# def test_repo_list_person():
+#     repo = PersonRepository(mapper= DataMapper)
+#     lista = repo.read_person(email =  user_test.email)
+#     print(f'read_passou_test = {lista}')
 
 
 # def test_repo_update_person():

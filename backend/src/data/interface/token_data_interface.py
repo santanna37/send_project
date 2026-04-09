@@ -5,7 +5,10 @@ from abc import ABC, abstractmethod
 
 
 
-class TokenAuthInterface(ABC):
+class TokenInterface(ABC):
 
     @abstractmethod
     def authenticate(self, person: PersonModel) -> Dict: pass
+
+    @abstractmethod
+    def decode(self, token: str) -> Dict: pass
