@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Contábil - Acesso</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Logo e Título -->
+            <div class="auth-header">
+                <div class="logo">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <rect width="48" height="48" rx="12" fill="#059669"/>
+                        <path d="M24 12L32 20H28V36H20V20H16L24 12Z" fill="#FCD34D"/>
+                    </svg>
+                </div>
+                <h1>Contador.I.A</h1>
+                <p>Automação de processos para contadores</p>
+            </div>
+
+            <!-- Abas de Navegação -->
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="register">Registro</button>
+            </div>
+
+            <!-- Formulário de Login -->
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" name="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" name="password" placeholder="••••••••" required>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember">
+                        <span>Lembrar-me</span>
+                    </label>
+                    <a href="#" class="forgot-link">Esqueceu a senha?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span>Entrar</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4.167 10h11.666m0 0L10 4.167M15.833 10L10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Formulário de Registro -->
+            <form id="register-form" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-name">Nome Completo</label>
+                        <input type="text" id="reg-name" name="name" placeholder="João Silva" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-cpf">CPF</label>
+                        <input type="text" id="reg-cpf" name="cpf" placeholder="000.000.000-00" maxlength="14">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reg-cnpj">CNPJ (opcional)</label>
+                    <input type="text" id="reg-cnpj" name="cnpj" placeholder="00.000.000/0000-00" maxlength="18">
+                </div>
+                <div class="form-group">
+                    <label for="reg-phone">Telefone</label>
+                    <input type="tel" id="reg-phone" name="phone" placeholder="(00) 00000-0000" maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">E-mail</label>
+                    <input type="email" id="reg-email" name="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Senha</label>
+                    <input type="password" id="reg-password" name="password" placeholder="Mínimo 8 caracteres" minlength="8" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span>Criar Conta</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 4.167v11.666m-5.833-5.833h11.666" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Mensagens -->
+            <div id="message-container" class="message-container"></div>
+        </div>
+    </div>
+
+    <script src="javascript/auth.js"></script>
+</body>
+</html>

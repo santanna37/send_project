@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Empresas - Sistema Contábil</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-small">
+                <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
+                    <rect width="48" height="48" rx="12" fill="#059669"/>
+                    <path d="M24 12L32 20H28V36H20V20H16L24 12Z" fill="#FCD34D"/>
+                </svg>
+            </div>
+            <span class="sidebar-title">Contábil Pro</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="cadastro_customer.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 2.5v15m-7.5-7.5h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Nova Empresa</span>
+            </a>
+            <a href="lista_customer.html" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M2.5 5h15M2.5 10h15M2.5 15h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Listar Empresas</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn btn-outline btn-sm" onclick="logout()">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M7.5 17.5H4.167A1.667 1.667 0 012.5 15.833V4.167A1.667 1.667 0 014.167 2.5H7.5M13.333 14.167L17.5 10m0 0l-4.167-4.167M17.5 10H7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Sair
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-content">
+                <h1>Empresas Cadastradas</h1>
+                <p class="subtitle">Gerencie seus clientes</p>
+            </div>
+            <div class="header-actions">
+                <a href="cadastro_customer.html" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 4.167v11.666m-5.833-5.833h11.666" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Nova Empresa
+                </a>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <!-- Filtros -->
+            <div class="filters-bar">
+                <div class="search-box">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M9.167 15.833A6.667 6.667 0 119.167 2.5a6.667 6.667 0 010 13.333zM17.5 17.5l-4.583-4.583" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Buscar por nome ou CNPJ...">
+                </div>
+                <div class="filter-actions">
+                    <select id="filter-status" class="filter-select">
+                        <option value="">Todos os status</option>
+                        <option value="active">Ativo</option>
+                        <option value="inactive">Inativo</option>
+                    </select>
+                    <button class="btn btn-secondary btn-sm" onclick="refreshData()">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                            <path d="M3.333 10a6.667 6.667 0 0111.667-4.167M16.667 10a6.667 6.667 0 01-11.667 4.167M16.667 10H14.167M5.833 10H3.333" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Atualizar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabela -->
+            <div class="table-container">
+                <table class="data-table" id="companies-table">
+                    <thead>
+                        <tr>
+                            <th>Nome da Empresa</th>
+                            <th>CNPJ</th>
+                            <th>Telefone</th>
+                            <th>E-mail</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Dados serão carregados via JavaScript -->
+                    </tbody>
+                </table>
+                
+                <!-- Estado vazio -->
+                <div id="empty-state" class="empty-state hidden">
+                    <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+                        <rect width="48" height="48" rx="12" fill="#F3F4F6"/>
+                        <path d="M24 16v16m-8-8h16" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>Nenhuma empresa encontrada</h3>
+                    <p>Cadastre sua primeira empresa para começar</p>
+                    <a href="clientes.html" class="btn btn-primary">Cadastrar Empresa</a>
+                </div>
+            </div>
+
+            <!-- Paginação -->
+            <div class="pagination" id="pagination">
+                <button class="btn btn-secondary btn-sm" id="prev-page" disabled>Anterior</button>
+                <span class="page-info">Página <span id="current-page">1</span> de <span id="total-pages">1</span></span>
+                <button class="btn btn-secondary btn-sm" id="next-page" disabled>Próxima</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/listagem.js"></script>
+</body>
+</html>

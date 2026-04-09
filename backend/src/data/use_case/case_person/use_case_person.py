@@ -1,7 +1,7 @@
 from src.domain.use_case.case_person.use_case_person_interface import UseCasePersonInterface
 from src.data.interface.repository_person_interface import PersonRepositoryInterface
 from src.data.interface.hash_data_interface import CryptoHashInterface
-from src.data.interface.token_data_interface import TokenAuthInterface
+from src.data.interface.token_data_interface import TokenInterface
 from src.domain.models.model_person import PersonModel
 from typing import List, Dict
 from src.infra.db.mappers.mapper import DataMapper
@@ -12,8 +12,8 @@ class UseCasePerson(UseCasePersonInterface):
 
     def __init__(self,
                 repository: PersonRepositoryInterface,
-                token: TokenAuthInterface,
-                hash_person: CryptoHashInterface):
+                token: TokenInterface = None,
+                hash_person: CryptoHashInterface = None):
         self.__repository = repository
         self.__token = token
         self.__hash = hash_person

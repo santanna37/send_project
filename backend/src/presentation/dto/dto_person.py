@@ -31,3 +31,12 @@ class DTOPerson:
             "cpf": person_model.cpf
         }
         return new_person
+
+    def dto_person_login(self, email: str, password: str) -> Dict:
+        email_person = self._validator.email_validador(email_person= email)
+        password_person = self._validator.password_validator(password= password)
+
+        return {
+            "email": email_person, 
+            "password": password_person
+                }

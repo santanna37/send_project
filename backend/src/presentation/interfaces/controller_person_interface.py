@@ -9,4 +9,7 @@ from abc import ABC, abstractmethod
 class PersonControllerInterface(ABC):
 
     @abstractmethod
-    def handler(self, http_request: HttpRequest) -> HttpResponse: pass
+    def create(self, http_request: HttpRequest) -> HttpResponse: pass
+
+    @abstractmethod
+    def login(self, http_request: HttpRequest) -> HttpResponse: pass

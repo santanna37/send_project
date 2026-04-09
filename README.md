@@ -17,7 +17,7 @@ ERROR: Algo quebrou uma operação (ex: "Erro ao conectar no banco"). É aqui qu
 CRITICAL: O sistema inteiro vai cair (ex: "Disco cheio" ou "Sem memória").
 
 ## Banco de dados
-
+* cnpj - 18 numeros
 ## Mappers
 
 ## Repositorios

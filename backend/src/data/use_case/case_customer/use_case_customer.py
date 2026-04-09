@@ -1,4 +1,4 @@
-from src.domain.use_case.case_customer.use_case_customer import UseCaseCustomerInterface
+from src.domain.use_case.case_customer.use_case_customer_interface import UseCaseCustomerInterface
 from src.data.interface.repository_customer_interface import CustomerRepositoryInterface
 from src.domain.models.model_customer import CustomerModel
 
