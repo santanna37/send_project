@@ -13,7 +13,7 @@ class Token(TokenInterface):
 
     def authenticate(self, person: PersonModel) -> Dict:
         token_data = {
-            "sub": person.id,
+            "sub": str(person.id),
             "exp": datetime.now(timezone.utc) + timedelta(hours=24)
         }
 

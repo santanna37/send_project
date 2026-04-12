@@ -14,10 +14,16 @@ class JWTBearer(HTTPBearer):
     async def __call__(self, request: Request) -> Dict:
         credentials: HTTPAuthorizationCredentials = await super().__call__(request)
 
+        print("=== DEBUG JWT ===")
+        print(f"scheme: {credentials.scheme}")
+        print(f"token recebido: {credentials.credentials}")
+        print("=================")
+
         if not credentials or credentials.scheme != "Bearer":
             raise HTTPException(status_code=HTTPStatus.BAD_GATEWAY, detail= "token invalido ou ausente")
 
         try:
             return self.__validator.decode(credentials.credentials)
         except ValueError as error:
+            print(f"erro: {error}")
             raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(error))

@@ -1,10 +1,20 @@
 from sqlalchemy import create_engine  
 from sqlalchemy.orm import sessionmaker, Session
+from dotenv import load_dotenv
+from pathlib import Path
+import os
+
+
+# Isso garante que as variáveis carreguem assim que o arquivo for lido
+env_path = Path(__file__).parent.parent.parent.parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
+#print(os.environ)
+# -----------------------------------
 
 class DBConnectionHandler:
 
     def __init__(self) -> None:
-        self.__conection_string = "mysql+pymysql://root:senha@localhost:3306/public"
+        self.__conection_string = os.getenv("DATABASE_URL")
 
         self.__engine = self.__create_database_engine()
         self.session: Session = None

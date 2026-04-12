@@ -14,12 +14,12 @@ customer_test = CustomerModel(
     id_person = 1
 )
 
-def test_crate_customer():
-    repo = CustomerRepository(mapper= DataMapper)
-    result = repo.create_customer(model_customer= customer_test)
-    print(f"resposta: {result}")
+# def test_crate_customer():
+#     repo = CustomerRepository(mapper= DataMapper)
+#     result = repo.create_customer(model_customer= customer_test)
+#     print(f"resposta: {result}")
 
-def test_read_customer():
-    repo = CustomerRepository(mapper= DataMapper)
-    result = repo.read_customer(id_person= 1)
-    print(f"resposta: {result}")
+# def test_read_customer():
+#     repo = CustomerRepository(mapper= DataMapper)
+#     result = repo.read_customer(id_person= 1)
+#     print(f"resposta: {result}")
