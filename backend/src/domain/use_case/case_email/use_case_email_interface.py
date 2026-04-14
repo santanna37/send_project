@@ -1,4 +1,3 @@
-from src.domain.constants.email_constants import EmailTemplateType
 from abc import ABC, abstractmethod
 from typing import Dict, List
 
@@ -12,14 +11,20 @@ class UseCaseEmailInterface(ABC):
         cnpj
         tipo
         """
-    @abstractmethod
-    def builder(self, pdf_path: str) -> Dict: pass
+    # @abstractmethod
+    # def get_path_list(self, list_pdf:List) -> List: pass
 
     @abstractmethod
-    def send(self, email: str, model: Dict) -> Dict: pass
+    def get_email_list(self, id_person:int, cnpj: str = None) -> List: pass
+    
+    @abstractmethod
+    def builder(self, pdf_bytes: bytes, pdf_name: str) -> Dict: pass
 
     @abstractmethod
-    def quest_customer(self, id_person: int) -> List: pass
+    def send(self, email: str, email_data: Dict) -> Dict: pass
 
     @abstractmethod
-    def trigger_email(self, list_customer: List, list_path: List): pass
+    def get_email_list(self, id_person: int, cnpj: str = None) -> List: pass
+
+    @abstractmethod
+    def trigger_email(self, list_email: List, list_pdf: List[Dict]) -> Dict: pass

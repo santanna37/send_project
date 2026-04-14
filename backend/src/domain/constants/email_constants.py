@@ -210,19 +210,25 @@ def _read_file_as_base64(file_path: str) -> str:
     Raises:
         FileNotFoundError: Se arquivo não existir
     """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Arquivo não encontrado: {file_path}")
+    if isinstance(file_path, bytes):
+        return base64.b64encode(file_path).decode("utf-8")
+
+    if isinstance(file_path, str):
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Arquivo não encontrado: {file_path}")
+
+        with open(file_path, "rb") as f:
+            return base64.b64encode(f.read()).decode("utf-8")
+
+    raise TypeError("attachment_path deve ser str ou bytes")
     
-    with open(file_path, "rb") as f:
-        file_bytes = f.read()
-    
-    return base64.b64encode(file_bytes).decode('utf-8')
+    #return base64.b64encode(file_bytes).decode('utf-8')
 
 def get_template(
     template_type: EmailTemplateType, 
     company_name: str, 
     sender_name: str = "Equipe Send",
-    attachment_path: str = None,
+    attachment_path: str | bytes = None,
     attachment_name: str = None
 ) -> dict:
     """

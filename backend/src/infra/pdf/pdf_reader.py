@@ -2,7 +2,7 @@ import fitz  # PyMuPDF
 import re
 import logging
 from typing import Dict, Optional
-
+import io
 
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,9 @@ class AdapterPDF:
     Adaptador para leitura e extração de dados de PDFs
     """
     
-    def extrair_dados_darf(self, pdf_path: str) -> Dict:
+    def extrair_dados_darf(self, pdf_path: bytes) -> Dict:
+        print("TIPO RECEBIDO:", type(pdf_path))
+        print("TAMANHO:", len(pdf_path) if pdf_path else 0)
         """
         Extrai dados do PDF de DARF/INSS/Simples
         
@@ -31,15 +33,19 @@ class AdapterPDF:
                 "valor_total": "1.234,56"
             }
         """
+        # pdf_bytes = io.BytesIO(pdf_path)
+
         try:
-            logger.info(f"[AdapterPDF] Lendo PDF: {pdf_path}")
-            
-            with fitz.open(pdf_path) as pdf:
-                # Extrai texto da primeira página
-                texto = pdf[0].get_text()
-            
-            logger.debug(f"[AdapterPDF] Texto extraído (primeiros 200 chars): {texto[:200]}")
-            
+            print("Processando PDF via stream...")
+            if pdf_path:
+                # Lê PDF a partir de bytes
+                with fitz.open(stream=pdf_path, filetype="pdf") as pdf:
+                    if pdf.page_count > 0:
+                        texto = pdf[0].get_text()
+            else:
+                raise ValueError("Nenhum PDF fornecido (bytes ou caminho)")
+
+            logger.debug(f"[AdapterPDF] Texto extraído: {texto[:50]}")
             # Extrai campos específicos
             dados = {
                 'cnpj': self._extrair_cnpj(texto),
@@ -55,7 +61,7 @@ class AdapterPDF:
             return dados
             
         except Exception as error:
-            logger.error(f"[AdapterPDF] Erro ao ler PDF: {error}")
+            logger.error(f"[AdapterPDF] Erro ao ler PDF -> : {error}")
             raise Exception(f"Erro ao processar PDF: {str(error)}")
     
     def _extrair_cnpj(self, texto: str) -> Optional[str]:

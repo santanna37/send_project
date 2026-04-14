@@ -45,7 +45,7 @@ class AdapterEmail:
             },
             "to": [{"email": email}],
             "subject": email_data.get("subject", "Sem assunto"),
-            "htmlContent": email_data.get("html", "")  # ✅ API Brevo espera htmlContent
+            "htmlContent": email_data.get("body", "")  # ✅ API Brevo espera htmlContent
         }
         
         # ========================================

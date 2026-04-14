@@ -1,11 +1,14 @@
-from fastapi import UploadFile
+from fastapi import UploadFile, Request, File, Depends
+from fastapi.responses import JSONResponse
+from src.presentation.http_types.http_request import HttpRequest
+from src.main.composers.composer_email import EmailCompose
 from typing import List
-from pathlib import Path
-import uuid
 import logging
+
 
 logger = logging.getLogger(__name__)
 
+composer = E
 UPLOAD_DIR = Path("./uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 

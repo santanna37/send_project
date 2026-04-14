@@ -12,50 +12,83 @@ class UseCaseEmail(UseCaseEmailInterface):
 
     def __init__(self,
                 adapter_email: AdapterEmail,
-                adapter_dpf: AdapterPDF,
+                adapter_pdf: AdapterPDF,
                 builder_email: get_template,
                 customer_repository: CustomerRepositoryInterface
                 ):
-        
-        self._repository = CustomerRepositoryInterface
+        self._repository = customer_repository
         self._adapter_email = adapter_email
-        self._adapter_pdf = AdapterPDF
-        self._builder_email = get_template
-    
-    def builder(self, pdf_path: str) -> Dict:
+        self._adapter_pdf = adapter_pdf
+        self._builder_email = builder_email
+
+    # def get_path_list(self, list_pdf:List) -> List:
+    #     list_path = []
+    #     self.list_pdf = list_pdf
+
+    #     for pdf in self.list_pdf:
+    #         item = self._adapter_pdf.extrair_dados_darf(pdf_path= pdf)
+    #         list_path.append(item)
         
-        info_pdf = self._adapter_pdf.extrair_dados_darf(pdf_path= pdf_path)
+    #     return list_path 
+
+
+    def get_email_list(self, id_person:int, cnpj: str = None) -> List:
+        response = self._repository.read_customer(id_person= id_person, cnpj= cnpj)
+        return response
+    
+    def builder(self, pdf_bytes: bytes, pdf_name: str) -> Dict:
+        info_pdf = self._adapter_pdf.extrair_dados_darf(pdf_path= pdf_bytes)
         
         email_data = self._builder_email(
-                                            template_type= type_email(info_pdf["tipo_documento"]),
-                                            company_name= info_pdf["razao_social"],
-                                            attachment_name= info_pdf["tipo_documento"],
-                                            attachment_path= pdf_path
-                                            )
+            template_type=EmailTemplateType(info_pdf["tipo_documento"]),
+            company_name=info_pdf["razao_social"],
+            attachment_name=pdf_name,
+            attachment_path=pdf_bytes
+        )
+        # Importante: Guardar o CNPJ para o "match" no trigger
         email_data["cnpj_extraido"] = info_pdf.get("cnpj")
         return email_data
     
     def send(self, email: str, email_data: Dict) -> Dict:
-
         try:
-            send_email = self._adapter_email.send_email(email= email, email_data= email_data)
-            if send_email:
-                return {
-                    "body": "email enviado"
-                }
+            success = self._adapter_email.send_email(email=email, email_data=email_data)
+            if success:
+                return {"status": "sucesso", "email": email}
+            return {"status": "erro", "detalhe": "Adapter retornou falso"}
         except Exception as exception:
-            return {"body": "falha no envio do email"}
-    
-    def quest_customer(self,id_person:int):
+            return {"status": "erro", "detalhe": str(exception)}
 
-        customer_list = self._repository.read_customer(id_person= id_person)
-        return email_list
+    def trigger_email(self, list_email: List, list_pdf: List[Dict]) -> Dict:
+        # Pega a lista de dentro do dicionário que veio do Controller
+        customers = list_email
+        relatorio = {}
 
-    def trigger_email(self, list_customer: List, list_path: List):
+        for pdf in list_pdf:
+            # 1. Gera os dados do email através do PDF
+            email_data = self.builder(pdf_bytes= pdf["bytes"], pdf_name= pdf["name"])
+            cnpj_do_pdf = email_data.get("cnpj_extraido")
 
+            # 2. Busca o cliente correto (Match)
+            target_customer = None
+            for c in customers:
+                if str(c.cnpj) == str(cnpj_do_pdf): # Garantimos que ambos sejam string
+                    target_customer = c
+                    print(f"customer -> {c} -- name: {c.name}")
+                    break
 
-        for path in list_path:
-            builder_email = self.builder(pdf_path= path)
+            # 3. Processa o envio e alimenta o relatório
+            if target_customer:
+                print(f"Enviando {pdf['name']} para {target_customer.email}...")
+                resultado = self.send(email=target_customer.email, email_data=email_data)
+                
+                # Incrementa o resultado com dados do cliente
+                resultado["name"] = target_customer.name
+                relatorio[pdf["name"]] = resultado
+            else:
+                relatorio[pdf["name"]] = {
+                    "status": "erro",
+                    "motivo": f"CNPJ {cnpj_do_pdf} não encontrado no banco",
+                    "cliente": "Desconhecido"
+                }
 
-            
-            sender = self.send(email= email, email_data= builder_email)
+        return relatorio
