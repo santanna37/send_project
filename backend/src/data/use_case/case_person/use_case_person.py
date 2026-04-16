@@ -20,12 +20,16 @@ class UseCasePerson(UseCasePersonInterface):
 
     def login(self, email: str, password: str):
         person = self.__repository.read_person(email= email)
+
         if not person:
             raise ValueError("Usuario não encontrado")
 
         verification = self.__hash.check_hash(password= password, hash_chec= person.password)
-        if verification:
-            token_access = self.__token.authenticate(person= person)
+        
+        if not verification:
+            raise ValueError("Senha invalida")
+
+        token_access = self.__token.authenticate(person= person)
         
         if not token_access:
             raise ValueError("Erro no token")
