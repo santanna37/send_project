@@ -3,7 +3,8 @@
  * Gerencia cadastro de empresas com upload de documentos
  */
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://send-project-xxv7.onrender.com';
+
 
 // Elementos do DOM
 const customerForm = document.getElementById('customer-form');
@@ -184,7 +185,7 @@ customerForm.addEventListener('submit', async (e) => {
             
             // Opcional: redirecionar para listagem
             setTimeout(() => {
-                window.location.href = 'listagem.html';
+                window.location.href = '/frontend/html/lista_customer.html';
             }, 1500);
         } else {
             showMessage(data.detail || 'Erro ao cadastrar empresa', 'error');
