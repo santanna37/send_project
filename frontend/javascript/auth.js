@@ -77,13 +77,33 @@ function switchTab(tab) {
     
     if (tab === 'login') {
         registerForm.classList.remove('active');
-        setTimeout(() => loginForm.add('active'), 50);
+        // O erro estava aqui: faltava o .classList antes do .add
+        setTimeout(() => loginForm.classList.add('active'), 50);
     } else {
         loginForm.classList.remove('active');
-        setTimeout(() => registerForm.add('active'), 50);
+        // E aqui também
+        setTimeout(() => registerForm.classList.add('active'), 50);
     }
     clearMessages();
 }
+// function switchTab(tab) {
+//     const tabBtns = document.querySelectorAll('.tab-btn');
+//     const loginForm = document.getElementById('login-form');
+//     const registerForm = document.getElementById('register-form');
+
+//     tabBtns.forEach(btn => {
+//         btn.classList.toggle('active', btn.dataset.tab === tab);
+//     });
+    
+//     if (tab === 'login') {
+//         registerForm.classList.remove('active');
+//         setTimeout(() => loginForm.add('active'), 50);
+//     } else {
+//         loginForm.classList.remove('active');
+//         setTimeout(() => registerForm.add('active'), 50);
+//     }
+//     clearMessages();
+// }
 
 // ==========================================
 // MÁSCARAS DE INPUT (Padrão Santanna)
