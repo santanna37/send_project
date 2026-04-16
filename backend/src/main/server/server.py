@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from src.main.routers.route_person import  router as person_router
 from src.main.routers.route_customer import router as customer_router
 from src.main.routers.route_email import router as email_router
-
+import os 
 
 
 app = FastAPI()
