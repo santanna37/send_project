@@ -172,7 +172,7 @@ async function handleLogin(e) {
         if (response.ok) {
             saveSession(data, document.getElementById('remember').checked);
             showMessage('Login realizado!', 'success');
-            window.location.href = 'lista_customer.html';
+            window.location.href = 'html/lista_customer.html';
         } else {
             throw new Error(data.detail || 'Falha no login');
         }
