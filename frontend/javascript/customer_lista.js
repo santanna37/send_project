@@ -1,17 +1,22 @@
 /**
  * =====================================================
  * SISTEMA CONTÁBIL - LISTAGEM DE EMPRESAS
- * Versão Production Ready
+ * Versão Production Ready - PATCH FINAL
  * =====================================================
- * Ajustes aplicados:
- * ✅ Ambiente local / produção automático
- * ✅ Correção de rotas
- * ✅ Refresh global
- * ✅ Tratamento de erro robusto
- * ✅ Token auth
- * ✅ Paginação
- * ✅ Filtros
- * ✅ Mensagens visuais
+ * ALTERAÇÕES REALIZADAS:
+ *
+ * ✅ Corrigido parse do retorno da API
+ * ✅ Compatível com:
+ *    - array direto
+ *    - { list_customer: [] }
+ *    - { data: [] }
+ *    - { items: [] }
+ *
+ * ✅ Corrigido finally do loading
+ * ✅ Logs estratégicos
+ * ✅ Safe render
+ * ✅ Delete protegido
+ * ✅ Comentários de manutenção
  * =====================================================
  */
 
@@ -76,7 +81,7 @@ function checkAuth() {
         localStorage.getItem("tokenExpiry") ||
         sessionStorage.getItem("tokenExpiry");
 
-    if (expiry && Date.now() > parseInt(expiry)) {
+    if (expiry && Date.now() > Number(expiry)) {
         logout();
         return false;
     }
@@ -98,14 +103,14 @@ function loadUserData() {
     try {
         const user = JSON.parse(
             localStorage.getItem("user") ||
-            sessionStorage.getItem("user") ||
-            "{}"
+                sessionStorage.getItem("user") ||
+                "{}"
         );
 
-        if (user.name) {
-            const nameEl = document.getElementById("user-name");
-            const avatarEl = document.querySelector(".avatar");
+        const nameEl = document.getElementById("user-name");
+        const avatarEl = document.querySelector(".avatar");
 
+        if (user?.name) {
             if (nameEl) nameEl.textContent = user.name;
             if (avatarEl)
                 avatarEl.textContent =
@@ -199,14 +204,33 @@ async function loadCompanies() {
             );
         }
 
-        companies = await response.json();
+        /* =================================================
+           ALTERAÇÃO #1
+           Captura payload bruto da API
+        ================================================= */
 
-        if (!Array.isArray(companies)) {
-            companies =
-                companies.data ||
-                companies.items ||
-                [];
+        const data = await response.json();
+
+        console.log("Payload API:", data);
+
+        /* =================================================
+           ALTERAÇÃO #2
+           Compatibilidade total com qualquer estrutura
+        ================================================= */
+
+        if (Array.isArray(data)) {
+            companies = data;
+        } else if (Array.isArray(data.list_customer)) {
+            companies = data.list_customer;
+        } else if (Array.isArray(data.data)) {
+            companies = data.data;
+        } else if (Array.isArray(data.items)) {
+            companies = data.items;
+        } else {
+            companies = [];
         }
+
+        console.log("Empresas carregadas:", companies);
     } catch (error) {
         console.error("Erro ao carregar empresas:", error);
 
@@ -216,13 +240,18 @@ async function loadCompanies() {
         );
 
         companies = getMockData();
+    } finally {
+        /* =================================================
+           ALTERAÇÃO #3
+           Loading sempre finaliza
+        ================================================= */
+
+        filteredCompanies = [...companies];
+
+        renderTable();
+        showLoading(false);
+        isLoading = false;
     }
-
-    filteredCompanies = [...companies];
-
-    renderTable();
-    showLoading(false);
-    isLoading = false;
 }
 
 /* =====================================================
@@ -267,8 +296,12 @@ function filterCompanies(searchTerm, status) {
     filteredCompanies = companies.filter((company) => {
         const matchSearch =
             !searchTerm ||
-            company.name?.toLowerCase().includes(searchTerm) ||
-            company.email?.toLowerCase().includes(searchTerm) ||
+            company.name
+                ?.toLowerCase()
+                .includes(searchTerm) ||
+            company.email
+                ?.toLowerCase()
+                .includes(searchTerm) ||
             company.cnpj?.includes(searchTerm);
 
         const matchStatus =
@@ -285,10 +318,13 @@ function filterCompanies(searchTerm, status) {
 ===================================================== */
 
 function renderTable() {
+    if (!tableBody) return;
+
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
     const pageItems = filteredCompanies.slice(start, end);
+
     const totalPages =
         Math.ceil(filteredCompanies.length / itemsPerPage) || 1;
 
@@ -339,13 +375,13 @@ function renderTable() {
 }
 
 function updatePagination(totalPages) {
-    document.getElementById("current-page") &&
-        (document.getElementById("current-page").textContent =
-            currentPage);
+    const currentEl =
+        document.getElementById("current-page");
+    const totalEl =
+        document.getElementById("total-pages");
 
-    document.getElementById("total-pages") &&
-        (document.getElementById("total-pages").textContent =
-            totalPages);
+    if (currentEl) currentEl.textContent = currentPage;
+    if (totalEl) totalEl.textContent = totalPages;
 
     if (prevPageBtn)
         prevPageBtn.disabled = currentPage === 1;
@@ -368,7 +404,8 @@ function editCompany(id) {
         JSON.stringify(company)
     );
 
-    window.location.href = `/html/cadastro_customer.html?edit=${id}`;
+    window.location.href =
+        `/html/cadastro_customer.html?edit=${id}`;
 }
 
 function confirmDelete(id) {
@@ -399,8 +436,9 @@ async function deleteCompany(id) {
             }
         );
 
-        if (!response.ok)
+        if (!response.ok) {
             throw new Error("Erro ao excluir");
+        }
 
         companies = companies.filter((c) => c.id !== id);
         filteredCompanies =
@@ -408,10 +446,16 @@ async function deleteCompany(id) {
 
         renderTable();
 
-        showMessage("Empresa removida com sucesso.");
+        showMessage(
+            "Empresa removida com sucesso.",
+            "success"
+        );
     } catch (error) {
         console.error(error);
-        showMessage("Erro ao excluir empresa", "error");
+        showMessage(
+            "Erro ao excluir empresa",
+            "error"
+        );
     }
 }
 
@@ -422,7 +466,7 @@ async function deleteCompany(id) {
 function formatCNPJ(cnpj) {
     if (!cnpj) return "-";
 
-    const v = cnpj.replace(/\D/g, "");
+    const v = String(cnpj).replace(/\D/g, "");
 
     if (v.length !== 14) return cnpj;
 
@@ -435,19 +479,21 @@ function formatCNPJ(cnpj) {
 function formatPhone(phone) {
     if (!phone) return "-";
 
-    const v = phone.replace(/\D/g, "");
+    const v = String(phone).replace(/\D/g, "");
 
-    if (v.length === 11)
+    if (v.length === 11) {
         return v.replace(
             /(\d{2})(\d{5})(\d{4})/,
             "($1) $2-$3"
         );
+    }
 
-    if (v.length === 10)
+    if (v.length === 10) {
         return v.replace(
             /(\d{2})(\d{4})(\d{4})/,
             "($1) $2-$3"
         );
+    }
 
     return phone;
 }
