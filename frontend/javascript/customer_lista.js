@@ -1,22 +1,13 @@
 /**
  * =====================================================
  * SISTEMA CONTÁBIL - LISTAGEM DE EMPRESAS
- * Versão Production Ready - PATCH FINAL
+ * Versão Production Ready - HOTFIX CIRÚRGICO
  * =====================================================
- * ALTERAÇÕES REALIZADAS:
- *
- * ✅ Corrigido parse do retorno da API
- * ✅ Compatível com:
- *    - array direto
- *    - { list_customer: [] }
- *    - { data: [] }
- *    - { items: [] }
- *
- * ✅ Corrigido finally do loading
- * ✅ Logs estratégicos
- * ✅ Safe render
- * ✅ Delete protegido
- * ✅ Comentários de manutenção
+ * OBJETIVO:
+ * ✅ Corrigir renderização dos dados vindos da API
+ * ✅ Manter tudo que já funcionava
+ * ✅ Não alterar fluxo existente
+ * ✅ Apenas adicionar compatibilidade de campos
  * =====================================================
  */
 
@@ -103,8 +94,8 @@ function loadUserData() {
     try {
         const user = JSON.parse(
             localStorage.getItem("user") ||
-                sessionStorage.getItem("user") ||
-                "{}"
+            sessionStorage.getItem("user") ||
+            "{}"
         );
 
         const nameEl = document.getElementById("user-name");
@@ -112,9 +103,11 @@ function loadUserData() {
 
         if (user?.name) {
             if (nameEl) nameEl.textContent = user.name;
-            if (avatarEl)
+
+            if (avatarEl) {
                 avatarEl.textContent =
                     user.name.charAt(0).toUpperCase();
+            }
         }
     } catch (error) {
         console.error("Erro ao carregar usuário:", error);
@@ -204,19 +197,9 @@ async function loadCompanies() {
             );
         }
 
-        /* =================================================
-           ALTERAÇÃO #1
-           Captura payload bruto da API
-        ================================================= */
-
         const data = await response.json();
 
         console.log("Payload API:", data);
-
-        /* =================================================
-           ALTERAÇÃO #2
-           Compatibilidade total com qualquer estrutura
-        ================================================= */
 
         if (Array.isArray(data)) {
             companies = data;
@@ -241,11 +224,6 @@ async function loadCompanies() {
 
         companies = getMockData();
     } finally {
-        /* =================================================
-           ALTERAÇÃO #3
-           Loading sempre finaliza
-        ================================================= */
-
         filteredCompanies = [...companies];
 
         renderTable();
@@ -294,18 +272,33 @@ function refreshData() {
 
 function filterCompanies(searchTerm, status) {
     filteredCompanies = companies.filter((company) => {
+        const companyName =
+            company.name ||
+            company.corporate_name ||
+            company.fantasy_name ||
+            "";
+
+        const companyEmail =
+            company.email || "";
+
+        const companyStatus =
+            company.status ||
+            (company.active === true
+                ? "active"
+                : "inactive");
+
         const matchSearch =
             !searchTerm ||
-            company.name
-                ?.toLowerCase()
+            companyName
+                .toLowerCase()
                 .includes(searchTerm) ||
-            company.email
-                ?.toLowerCase()
+            companyEmail
+                .toLowerCase()
                 .includes(searchTerm) ||
-            company.cnpj?.includes(searchTerm);
+            String(company.cnpj || "").includes(searchTerm);
 
         const matchStatus =
-            !status || company.status === status;
+            !status || companyStatus === status;
 
         return matchSearch && matchStatus;
     });
@@ -339,44 +332,79 @@ function renderTable() {
     emptyState?.classList.add("hidden");
 
     tableBody.innerHTML = pageItems
-        .map(
-            (company) => `
+        .map((company) => {
+            /* ==========================================
+               HOTFIX:
+               Compatibilidade sem quebrar legado
+            ========================================== */
+
+            const id =
+                company.id ||
+                company.id_customer ||
+                0;
+
+            const name =
+                company.name ||
+                company.corporate_name ||
+                company.fantasy_name ||
+                "-";
+
+            const cnpj =
+                company.cnpj || "-";
+
+            const phone =
+                company.phone ||
+                company.cellphone ||
+                company.telephone ||
+                "-";
+
+            const email =
+                company.email || "-";
+
+            const status =
+                company.status ||
+                (company.active === true
+                    ? "active"
+                    : "inactive");
+
+            return `
         <tr>
-            <td>${escapeHtml(company.name)}</td>
-            <td>${formatCNPJ(company.cnpj)}</td>
-            <td>${formatPhone(company.phone)}</td>
-            <td>${escapeHtml(company.email)}</td>
+            <td>${escapeHtml(name)}</td>
+            <td>${formatCNPJ(cnpj)}</td>
+            <td>${formatPhone(phone)}</td>
+            <td>${escapeHtml(email)}</td>
             <td>
                 <span class="status-badge ${
-                    company.status === "active"
+                    status === "active"
                         ? "status-active"
                         : "status-inactive"
                 }">
                     ${
-                        company.status === "active"
+                        status === "active"
                             ? "Ativo"
                             : "Inativo"
                     }
                 </span>
             </td>
             <td>
-                <button onclick="editCompany(${company.id})">
+                <button onclick="editCompany(${id})">
                     Editar
                 </button>
 
-                <button onclick="confirmDelete(${company.id})">
+                <button onclick="confirmDelete(${id})">
                     Excluir
                 </button>
             </td>
         </tr>
-    `
-        )
+        `;
+        })
         .join("");
 }
 
 function updatePagination(totalPages) {
     const currentEl =
         document.getElementById("current-page");
+
     const totalEl =
         document.getElementById("total-pages");
 
@@ -387,7 +415,8 @@ function updatePagination(totalPages) {
         prevPageBtn.disabled = currentPage === 1;
 
     if (nextPageBtn)
-        nextPageBtn.disabled = currentPage >= totalPages;
+        nextPageBtn.disabled =
+            currentPage >= totalPages;
 }
 
 /* =====================================================
@@ -395,7 +424,11 @@ function updatePagination(totalPages) {
 ===================================================== */
 
 function editCompany(id) {
-    const company = companies.find((c) => c.id === id);
+    const company = companies.find(
+        (c) =>
+            c.id === id ||
+            c.id_customer === id
+    );
 
     if (!company) return;
 
@@ -409,12 +442,22 @@ function editCompany(id) {
 }
 
 function confirmDelete(id) {
-    const company = companies.find((c) => c.id === id);
+    const company = companies.find(
+        (c) =>
+            c.id === id ||
+            c.id_customer === id
+    );
 
     if (!company) return;
 
+    const companyName =
+        company.name ||
+        company.corporate_name ||
+        company.fantasy_name ||
+        "empresa";
+
     const ok = confirm(
-        `Deseja excluir ${company.name}?`
+        `Deseja excluir ${companyName}?`
     );
 
     if (ok) deleteCompany(id);
@@ -440,9 +483,18 @@ async function deleteCompany(id) {
             throw new Error("Erro ao excluir");
         }
 
-        companies = companies.filter((c) => c.id !== id);
+        companies = companies.filter(
+            (c) =>
+                c.id !== id &&
+                c.id_customer !== id
+        );
+
         filteredCompanies =
-            filteredCompanies.filter((c) => c.id !== id);
+            filteredCompanies.filter(
+                (c) =>
+                    c.id !== id &&
+                    c.id_customer !== id
+            );
 
         renderTable();
 
@@ -452,6 +504,7 @@ async function deleteCompany(id) {
         );
     } catch (error) {
         console.error(error);
+
         showMessage(
             "Erro ao excluir empresa",
             "error"
@@ -518,23 +571,33 @@ function showLoading(show) {
     if (!btn) return;
 
     btn.disabled = show;
+
     btn.innerHTML = show
         ? "Carregando..."
         : "Atualizar";
 }
 
-function showMessage(message, type = "success") {
-    console.log(`[${type.toUpperCase()}] ${message}`);
+function showMessage(
+    message,
+    type = "success"
+) {
+    console.log(
+        `[${type.toUpperCase()}] ${message}`
+    );
 
     const container =
-        document.getElementById("message-container");
+        document.getElementById(
+            "message-container"
+        );
 
     if (!container) {
         alert(message);
         return;
     }
 
-    const div = document.createElement("div");
+    const div =
+        document.createElement("div");
+
     div.className = `message ${type}`;
     div.textContent = message;
 
