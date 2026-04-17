@@ -178,7 +178,7 @@ customerForm.addEventListener('submit', async (e) => {
             showMessage('Empresa cadastrada com sucesso!', 'success');
             resetForm();
             setTimeout(() => {
-                window.location.href = '/frontend/html/lista_customer.html';
+                window.location.href = 'cadastro_customer.html';
             }, 1500);
         } else {
             const msg = data.detail || data.error || `Erro ${response.status}`;
