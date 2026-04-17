@@ -169,7 +169,7 @@ customerForm.addEventListener('submit', async (e) => {
     try {
         const token = localStorage.getItem('token');
         
-        const response = await fetch(`${API_BASE_URL}/customers`, {
+        const response = await fetch(`${API_BASE_URL}/customer/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
