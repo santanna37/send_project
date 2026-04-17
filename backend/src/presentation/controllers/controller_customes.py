@@ -31,7 +31,7 @@ class  CustomerController(CustomerControllerInterface):
             print(f" data -> {data_share}")
             result = self._use_case.reader(cnpj= data_share.get("cnpj"), id_person= data_share.get("id_person"))
 
-            return HttpResponse(status_code= HTTPStatus.FOUND, body= {
+            return HttpResponse(status_code= HTTPStatus.OK, body= {
                 "list_customer": result.get("list_customer"),
                 "count_customers": result.get("count_customers")
             })
