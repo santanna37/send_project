@@ -100,10 +100,11 @@
                     </div>
 
                     <div class="batch-actions-proc">
-                        <button class="btn btn-secondary" onclick="clearQueue()" id="btn-clear" disabled>
+                        <button class="btn btn-secondary" id="btn-clear" disabled>
                             Limpar Fila
                         </button>
-                        <button class="btn btn-primary" onclick="startProcessing()" id="btn-process" disabled style="flex: 1;">
+                        <!-- ✅ CORREÇÃO 1: Removido o 'onclick="startProcessing()"' -->
+                        <button class="btn btn-primary" id="btn-process" disabled style="flex: 1;">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" fill="currentColor"/>
                                 <path d="M10 6v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -115,8 +116,7 @@
                     <div class="config-section">
                         <h3>Configurações do Lote</h3>
                         <select id="target-client" class="form-select-proc">
-                            <option value="">Selecionar cliente...</option>
-                            <option value="auto">Detectar automaticamente (por CNPJ)</option>
+                            <option value="auto" selected>Detectar automaticamente (por CNPJ)</option>
                         </select>
                         <select id="doc-type" class="form-select-proc">
                             <option value="auto">Detecção automática de tipo</option>
@@ -234,6 +234,7 @@
 
     <div id="message-container" class="message-container"></div>
 
-    <script src="../javascript/envio_simples.js"></script>
+    <!-- ✅ CORREÇÃO 2: Adicionado o atributo 'defer' -->
+    <script src="../javascript/envio_simples.js" defer></script>
 </body>
 </html>
