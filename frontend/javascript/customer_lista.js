@@ -83,7 +83,7 @@ function checkAuth() {
 function logout() {
     localStorage.clear();
     sessionStorage.clear();
-    window.location.href = "/index.html";
+    window.location.href = "../index.html";
 }
 
 /* =====================================================
