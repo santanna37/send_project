@@ -3,6 +3,7 @@ from src.domain.constants.email_constants import EmailTemplateType, get_template
 from src.data.interface.repository_customer_interface import CustomerRepositoryInterface
 from src.infra.email.email_connection import AdapterEmail
 from src.infra.pdf.pdf_reader import AdapterPDF
+import re
 
 from typing import Dict, List
 
@@ -67,6 +68,19 @@ class UseCaseEmail(UseCaseEmailInterface):
             # 1. Gera os dados do email através do PDF
             email_data = self.builder(pdf_bytes= pdf["bytes"], pdf_name= pdf["name"])
             cnpj_do_pdf = email_data.get("cnpj_extraido")
+
+            # 1.1) Primeiro tenta pegar CNPJ com máscara (mais comum)
+            m = re.search(r"(\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2})", cnpj_do_pdf)
+            if m:
+                cnpj_pdf_tratado = re.sub(r"\D", "", m.group(1))
+
+            # 1.2) Fallback: tenta achar 14 dígitos seguidos
+            m2 = re.search(r"\b(\d{14})\b", cnpj_do_pdf)
+            if m2:
+                cnpj_pdf_tratado = m2.group(1)
+            
+            cnpj_do_pdf = cnpj_pdf_tratado
+
 
             # 2. Busca o cliente correto (Match)
             target_customer = None
