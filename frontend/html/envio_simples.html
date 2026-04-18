@@ -1,240 +1,246 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processamento em Lote - Sistema Contábil</title>
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Processamento em Lote - Sistema Contábil</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo-small">
-                <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
-                    <rect width="48" height="48" rx="12" fill="#059669"/>
-                    <path d="M24 12L32 20H28V36H20V20H16L24 12Z" fill="#FCD34D"/>
-                </svg>
-            </div>
-            <span class="sidebar-title">Contador.I.A</span>
+<!-- Sidebar Navigation -->
+<aside class="sidebar">
+<div class="sidebar-header">
+    <div class="logo-small">
+    <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="12" fill="#059669"/>
+        <path d="M24 12L32 20H28V36H20V20H16L24 12Z" fill="#FCD34D"/>
+    </svg>
+    </div>
+    <span class="sidebar-title">Contador.I.A</span>
+</div>
+
+<nav class="sidebar-nav">
+    <a href="./cadastro_customer.html" class="nav-item">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2.5v15m-7.5-7.5h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Nova Empresa</span>
+    </a>
+
+    <a href="./lista_customer.html" class="nav-item">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M2.5 5h15M2.5 10h15M2.5 15h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Listar Empresas</span>
+    </a>
+
+    <a href="./envio_simples.html" class="nav-item active">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" stroke="currentColor" stroke-width="2"/>
+        <path d="M3 7h14M7 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Envio do SIMPLES/INSS</span>
+    </a>
+</nav>
+
+<div class="sidebar-footer">
+    <button class="btn btn-outline btn-sm" onclick="logout()">
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+        <path d="M7.5 17.5H4.167A1.667 1.667 0 012.5 15.833V4.167A1.667 1.667 0 014.167 2.5H7.5M13.333 14.167L17.5 10m0 0l-4.167-4.167M17.5 10H7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Sair
+    </button>
+</div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+<header class="page-header">
+    <div class="header-content">
+    <h1>Processamento em Lote de PDFs</h1>
+    <p class="subtitle">Envie documentos para extração e envio automático aos clientes</p>
+    </div>
+    <div class="user-info">
+    <span id="user-name">Usuário</span>
+    <div class="avatar">U</div>
+    </div>
+</header>
+
+<div class="content-wrapper processing-layout">
+    <!-- Coluna Esquerda: Upload -->
+    <div class="upload-section">
+    <div class="card-proc">
+        <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Selecionar Arquivos
+        </h2>
+
+        <div class="upload-zone-large" id="upload-zone">
+        <input type="file" id="batch-upload" accept=".pdf" multiple hidden>
+        <div class="upload-icon-large">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+            <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </div>
-        
-        <nav class="sidebar-nav">
-            <a href="./cadastro_customer.html" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 2.5v15m-7.5-7.5h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Nova Empresa</span>
-            </a>
-            <a href="./lista_customer.html" class="nav-item">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M2.5 5h15M2.5 10h15M2.5 15h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Listar Empresas</span>
-            </a>
-            <a href="./envio_simples.html" class="nav-item active">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M3 5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" stroke="currentColor" stroke-width="2"/>
-                    <path d="M3 7h14M7 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span>Envio do SIMPLES/INSS</span>
-            </a>
-        </nav>
-
-        <div class="sidebar-footer">
-            <button class="btn btn-outline btn-sm" onclick="logout()">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                    <path d="M7.5 17.5H4.167A1.667 1.667 0 012.5 15.833V4.167A1.667 1.667 0 014.167 2.5H7.5M13.333 14.167L17.5 10m0 0l-4.167-4.167M17.5 10H7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Sair
-            </button>
+        <h3>Arraste PDFs aqui</h3>
+        <p>ou <span style="color: var(--primary-green); font-weight: 600;">clique para selecionar</span> múltiplos arquivos</p>
+        <small>Suporta: Notas Fiscais, Boletos, Contratos, etc. • Máx. 50MB cada</small>
         </div>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <header class="page-header">
-            <div class="header-content">
-                <h1>Processamento em Lote de PDFs</h1>
-                <p class="subtitle">Envie documentos para extração e envio automático aos clientes</p>
+        <div class="file-queue-proc" id="file-queue" style="display: none;">
+        <div class="queue-header">
+            <h4>Fila de Processamento</h4>
+            <span class="queue-count" id="queue-count">0 arquivos</span>
+        </div>
+        <div id="queue-list"></div>
+        </div>
+
+        <div class="batch-actions-proc">
+        <button class="btn btn-secondary" id="btn-clear" disabled>
+            Limpar Fila
+        </button>
+
+        <button class="btn btn-primary" id="btn-process" disabled style="flex: 1;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" fill="currentColor"/>
+            <path d="M10 6v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Iniciar Processamento
+        </button>
+        </div>
+
+        <div class="config-section">
+        <h3>Configurações do Lote</h3>
+
+        <select id="target-client" class="form-select-proc">
+            <option value="auto" selected>Detectar automaticamente (por CNPJ)</option>
+        </select>
+
+        <select id="doc-type" class="form-select-proc">
+            <option value="auto">Detecção automática de tipo</option>
+            <option value="nfe">Nota Fiscal Eletrônica</option>
+            <option value="boleto">Boleto Bancário</option>
+            <option value="contrato">Contrato</option>
+            <option value="recibo">Recibo</option>
+            <option value="outro">Outro</option>
+        </select>
+
+        <label class="checkbox-proc">
+            <input type="checkbox" id="notify-client" checked>
+            <span>Notificar cliente por e-mail após envio</span>
+        </label>
+        </div>
+    </div>
+    </div>
+
+    <!-- Coluna Direita: Monitoramento -->
+    <div class="monitor-section">
+    <div class="monitor-card">
+        <div class="monitor-header">
+        <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Andamento do Processo
+        </h2>
+        <div class="status-badge-proc" id="batch-status">
+            <span class="status-dot-proc waiting"></span>
+            <span>Aguardando arquivos</span>
+        </div>
+        </div>
+
+        <div class="overall-progress-proc">
+        <div class="progress-header">
+            <span class="progress-label">Progresso Total</span>
+            <span class="progress-percent" id="overall-percent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="overall-bar" style="width: 0%"></div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+            <span class="stat-number" id="stat-pending">0</span>
+            <span class="stat-label">Pendentes</span>
             </div>
-            <div class="user-info">
-                <span id="user-name">Usuário</span>
-                <div class="avatar">U</div>
+            <div class="stat-box">
+            <span class="stat-number" id="stat-processing">0</span>
+            <span class="stat-label">Processando</span>
             </div>
-        </header>
-
-        <div class="content-wrapper processing-layout">
-            <!-- Coluna Esquerda: Upload -->
-            <div class="upload-section">
-                <div class="card-proc">
-                    <h2>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Selecionar Arquivos
-                    </h2>
-
-                    <div class="upload-zone-large" id="upload-zone">
-                        <input type="file" id="batch-upload" accept=".pdf" multiple hidden>
-                        <div class="upload-icon-large">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 16V4m0 0l-4 4m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <h3>Arraste PDFs aqui</h3>
-                        <p>ou <span style="color: var(--primary-green); font-weight: 600;">clique para selecionar</span> múltiplos arquivos</p>
-                        <small>Suporta: Notas Fiscais, Boletos, Contratos, etc. • Máx. 50MB cada</small>
-                    </div>
-
-                    <div class="file-queue-proc" id="file-queue" style="display: none;">
-                        <div class="queue-header">
-                            <h4>Fila de Processamento</h4>
-                            <span class="queue-count" id="queue-count">0 arquivos</span>
-                        </div>
-                        <div id="queue-list"></div>
-                    </div>
-
-                    <div class="batch-actions-proc">
-                        <button class="btn btn-secondary" id="btn-clear" disabled>
-                            Limpar Fila
-                        </button>
-                        <!-- ✅ CORREÇÃO 1: Removido o 'onclick="startProcessing()"' -->
-                        <button class="btn btn-primary" id="btn-process" disabled style="flex: 1;">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" fill="currentColor"/>
-                                <path d="M10 6v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            Iniciar Processamento
-                        </button>
-                    </div>
-
-                    <div class="config-section">
-                        <h3>Configurações do Lote</h3>
-                        <select id="target-client" class="form-select-proc">
-                            <option value="auto" selected>Detectar automaticamente (por CNPJ)</option>
-                        </select>
-                        <select id="doc-type" class="form-select-proc">
-                            <option value="auto">Detecção automática de tipo</option>
-                            <option value="nfe">Nota Fiscal Eletrônica</option>
-                            <option value="boleto">Boleto Bancário</option>
-                            <option value="contrato">Contrato</option>
-                            <option value="recibo">Recibo</option>
-                            <option value="outro">Outro</option>
-                        </select>
-                        <label class="checkbox-proc">
-                            <input type="checkbox" id="notify-client" checked>
-                            <span>Notificar cliente por e-mail após envio</span>
-                        </label>
-                    </div>
-                </div>
+            <div class="stat-box">
+            <span class="stat-number success" id="stat-completed">0</span>
+            <span class="stat-label">Concluídos</span>
             </div>
-
-            <!-- Coluna Direita: Monitoramento -->
-            <div class="monitor-section">
-                <div class="monitor-card">
-                    <div class="monitor-header">
-                        <h2>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            Andamento do Processo
-                        </h2>
-                        <div class="status-badge-proc" id="batch-status">
-                            <span class="status-dot-proc waiting"></span>
-                            <span>Aguardando arquivos</span>
-                        </div>
-                    </div>
-
-                    <div class="overall-progress-proc">
-                        <div class="progress-header">
-                            <span class="progress-label">Progresso Total</span>
-                            <span class="progress-percent" id="overall-percent">0%</span>
-                        </div>
-                        <div class="progress-bar-bg">
-                            <div class="progress-bar-fill" id="overall-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-box">
-                                <span class="stat-number" id="stat-pending">0</span>
-                                <span class="stat-label">Pendentes</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number" id="stat-processing">0</span>
-                                <span class="stat-label">Processando</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number success" id="stat-completed">0</span>
-                                <span class="stat-label">Concluídos</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-number error" id="stat-failed">0</span>
-                                <span class="stat-label">Falhas</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="processing-list-proc" id="processing-list">
-                        <div class="empty-state-proc">
-                            <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
-                                <rect width="48" height="48" rx="12" fill="#F3F4F6"/>
-                                <path d="M24 16v16m-8-8h16" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                            <p>Nenhum processamento iniciado</p>
-                            <small>Adicione arquivos e clique em "Iniciar Processamento"</small>
-                        </div>
-                    </div>
-
-                    <div class="activity-log-proc">
-                        <h4>Log de Atividades</h4>
-                        <div class="log-container-proc" id="activity-log">
-                            <div class="log-entry-proc">
-                                <span class="log-time">--:--:--</span>
-                                <span class="log-msg">Sistema pronto para receber arquivos</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumo (inicialmente oculto) -->
-                <div class="summary-card" id="batch-summary" style="display: none;">
-                    <h3>Resumo do Lote</h3>
-                    <div class="summary-grid-proc">
-                        <div class="summary-item-proc">
-                            <span class="summary-label">Total de Arquivos</span>
-                            <span class="summary-value" id="summary-total">0</span>
-                        </div>
-                        <div class="summary-item-proc">
-                            <span class="summary-label">Processados com Sucesso</span>
-                            <span class="summary-value success" id="summary-success">0</span>
-                        </div>
-                        <div class="summary-item-proc">
-                            <span class="summary-label">Falhas</span>
-                            <span class="summary-value error" id="summary-failed">0</span>
-                        </div>
-                        <div class="summary-item-proc">
-                            <span class="summary-label">Tempo Total</span>
-                            <span class="summary-value" id="summary-time">00:00</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline btn-full" onclick="downloadReport()">
-                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                            <path d="M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2M7 10l3 3 3-3M10 2v11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Baixar Relatório
-                    </button>
-                </div>
+            <div class="stat-box">
+            <span class="stat-number error" id="stat-failed">0</span>
+            <span class="stat-label">Falhas</span>
             </div>
         </div>
-    </main>
+        </div>
 
-    <div id="message-container" class="message-container"></div>
+        <div class="processing-list-proc" id="processing-list">
+        <div class="empty-state-proc">
+            <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="12" fill="#F3F4F6"/>
+            <path d="M24 16v16m-8-8h16" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p>Nenhum processamento iniciado</p>
+            <small>Adicione arquivos e clique em "Iniciar Processamento"</small>
+        </div>
+        </div>
 
-    <!-- ✅ CORREÇÃO 2: Adicionado o atributo 'defer' -->
-    <script src="../javascript/envio_simples.js" defer></script>
+        <div class="activity-log-proc">
+        <h4>Log de Atividades</h4>
+        <div class="log-container-proc" id="activity-log">
+            <div class="log-entry-proc">
+            <span class="log-time">--:--:--</span>
+            <span class="log-msg">Sistema pronto para receber arquivos</span>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="summary-card" id="batch-summary" style="display: none;">
+        <h3>Resumo do Lote</h3>
+        <div class="summary-grid-proc">
+        <div class="summary-item-proc">
+            <span class="summary-label">Total de Arquivos</span>
+            <span class="summary-value" id="summary-total">0</span>
+        </div>
+        <div class="summary-item-proc">
+            <span class="summary-label">Processados com Sucesso</span>
+            <span class="summary-value success" id="summary-success">0</span>
+        </div>
+        <div class="summary-item-proc">
+            <span class="summary-label">Falhas</span>
+            <span class="summary-value error" id="summary-failed">0</span>
+        </div>
+        <div class="summary-item-proc">
+            <span class="summary-label">Tempo Total</span>
+            <span class="summary-value" id="summary-time">00:00</span>
+        </div>
+        </div>
+
+        <button class="btn btn-outline btn-full" onclick="downloadReport()">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2M7 10l3 3 3-3M10 2v11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Baixar Relatório
+        </button>
+    </div>
+    </div>
+</div>
+</main>
+
+<div id="message-container" class="message-container"></div>
+
+<script src="../javascript/envio_simples.js"></script>
 </body>
 </html>
